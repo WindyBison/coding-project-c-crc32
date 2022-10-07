@@ -18,12 +18,12 @@
 **	uint32_t CRCTable[256];
 **
 **	for(byte = 0; byte <= 255; byte++) {
-**			crc32 = byte;
-**			for (i = 7; i >= 0; i--) { 
-**				mask = -(crc32 & 1);
-**				crc32 = (crc32 >> 1) ^ (0xEDB88320 & mask);
-**			}
-**			CRCTable[byte] = crc32;
+**		crc32 = byte;
+**		for (i = 7; i >= 0; i--) { 
+**			mask = -(crc32 & 1);
+**			crc32 = (crc32 >> 1) ^ (0xEDB88320 & mask);
+**		}
+**		CRCTable[byte] = crc32;
 **	}
 **
 **	Code to print the table for verification:
@@ -114,61 +114,61 @@ int main(int argc, char ** argv){
 	**	1st argument should be the exe
 	**	2nd argument should be the filename
 	*/
-    if(argc != 2){
-        printf("Usage: windybisoncrc32.exe <input file name>\n");
-        exit(1);
-    }
-    
+	if(argc != 2){
+		printf("Usage: windybisoncrc32.exe <input file name>\n");
+		exit(1);
+	}
+
 	/* Display the input file */
-    printf("Reading File: %s\n", argv[1]);
-    
+	printf("Reading File: %s\n", argv[1]);
+
 	/*	Establish input file variables
 	**	File *fp: Standard File struct to store the file pointer
 	**	size_t filesize: Unsigned long long to store the file size
 	**	uint8_t *buffer: unsigned char pointer for reading the file into memory
 	*/
-    FILE *fp;
-    size_t filesize;
-    uint8_t *buffer;
+	FILE *fp;
+	size_t filesize;
+	uint8_t *buffer;
 
 	/*	Read the passed argument to the file pointer in binary "rb"
 	**	Catch for an error of file open
 	*/
-    fp = fopen(argv[1],"rb");
-    if(!fp){
+	fp = fopen(argv[1],"rb");
+	if(!fp){
 		perror(argv[1]),exit(1);
-    }
-    
+	}
+
 	/*	fseek the file pointer to the end of file
 	**	ftell the pointer to grab the file size
 	**	rewind the file pointer back to beginning of file
 	*/
-    fseek(fp,0L,SEEK_END);
-    filesize = ftell(fp);
-    rewind(fp);
+	fseek(fp,0L,SEEK_END);
+	filesize = ftell(fp);
+	rewind(fp);
 
-    /*	Allocate memory with 1 entity and the size of the file size + 1
+	/*	Allocate memory with 1 entity and the size of the file size + 1
 	**	calloc and file size+1 is used to have the memory be 0 terminated
 	**	catch for if memory allocation did not complete
-	**	if no memory pointer exists, then close the file and write to stderr 
+	**	if no memory pointer exists, then close the file and write to stderr
 	*/
-    buffer = calloc(1,filesize+1);
-    if(!buffer){
-        fclose(fp),fputs("Failed to allocate memory",stderr),exit(1);
-    }
-    
-    /*	Read the file into the buffer
+	buffer = calloc(1,filesize+1);
+	if(!buffer){
+		fclose(fp),fputs("Failed to allocate memory",stderr),exit(1);
+	}
+
+	/*	Read the file into the buffer
 	**	If the read fails, close the file, free memory and write to stderr
 	*/
-    if(1!=fread(buffer,filesize,1,fp)){
-        fclose(fp),free(buffer),fputs("Failed to read of file into memory",stderr),exit(1);
-    }
-    
-	/* Close the file after finishing read */
-    fclose(fp);
+	if(1!=fread(buffer,filesize,1,fp)){
+		fclose(fp),free(buffer),fputs("Failed to read of file into memory",stderr),exit(1);
+	}
 
-    /* Perform crc32 calculation via crc32 function on the file that is in memory */
-    uint32_t crc = calculateCRC32(buffer,filesize);
+	/* Close the file after finishing read */
+	fclose(fp);
+
+	/* Perform crc32 calculation via crc32 function on the file that is in memory */
+	uint32_t crc = calculateCRC32(buffer,filesize);
 
 	/* Free the memory now that calculations are done */
 	free(buffer);
@@ -178,8 +178,8 @@ int main(int argc, char ** argv){
 	**	%x will display the unsinged integer in hex
 	*/
 	printf("Total Size of File: %llu bytes\n",filesize);
-    printf("CRC32 of file is: %x",crc);
+	printf("CRC32 of file is: %x",crc);
 
 	/* End main function */
-    return 0;
+	return 0;
 }
