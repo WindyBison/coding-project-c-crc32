@@ -1,0 +1,3 @@
+Reading File: TestFile.txt
+Total Size of File: 79 bytes
+CRC32 of file is: 78c77a6b
